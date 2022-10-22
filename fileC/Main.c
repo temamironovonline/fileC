@@ -8,29 +8,36 @@ int main(void)
 {
 	FILE* file;
 	char buffer[12];
-
 	file = fopen("1.txt", "r");
-	fgets(buffer, 12, file);
+	fgets(buffer, 11, file);
 	printf("%s", buffer);
 	fclose(file);
-	//getch();
 
-	char* lastOne = calloc(1, sizeof(char*)+1);
+	char* lastOne;
 	float* lastTwo = calloc(1, sizeof(float*)+1);
-	for (int i = 0; i < 12; i++)
+	int j = 0;
+
+
+	lastOne = strtok(buffer, " ");
+	int i = 0;
+	printf("\n%p\n ", &lastOne[0]);
+	for (int i = 0; i < 11; i++)
 	{
-		if (buffer[i] != ' ')
-		{
-			lastOne[i] = buffer[i];
-			realloc(lastOne, (i + 2) * sizeof(char*) + 1);
-		}
-		/*else
-		{
-			break;
-		}*/
+		printf("%p ", &lastOne[i]);
+ 	}
+	printf("\n%p ", &lastOne);
+	while (lastOne != NULL)
+	{
+		printf("\n%s\n", lastOne);
+		printf("\n%p\n", &lastOne);
+		lastTwo[i] = atof(lastOne);
+		lastOne = strtok(NULL, " ");
+		i++;
+		
 	}
-	printf("\n%s", lastOne);
-	lastTwo[0] = strtol(lastOne, NULL, lastTwo[0]);
-	printf("%f", lastTwo[0]);
-	//file = fopen("1.txt", "r");
+
+	for (int i = 0; i < 3; i++)
+	{
+		printf("%f ", lastTwo[i]);
+	}
 }
