@@ -24,16 +24,16 @@ int main(void)
 float* getСoefficients()
 {
 	FILE* file;
-	char textFromFile[11];
+	char textFromFile[20];
 	file = fopen("1.txt", "r");
-	fgets(textFromFile, 11, file);
+	fgets(textFromFile, 20, file);
 	printf("%s", textFromFile);
 	printf("\n");
 	fclose(file);
 
-	char* SplitTextFromFile;
-	float* coefficientsFromFile = calloc(3, sizeof(float*) + 1);
-	SplitTextFromFile = strtok(textFromFile, " ");
+	char* SplitTextFromFile = strtok(textFromFile, " ");
+	printf("%d\n", SplitTextFromFile);
+	float* coefficientsFromFile = calloc(3, sizeof(float));
 
 	for (int i = 0; SplitTextFromFile != NULL; i++)
 	{
@@ -49,43 +49,63 @@ void decisionCompleteEquation(float forCoefficientA, float forCoefficientB, floa
 	float discriminant;
 	float x1, x2;
 	
+	FILE* file;
+	file = fopen("2.txt", "w");
+	
 	discriminant = pow(forCoefficientB, 2) - 4 * forCoefficientA * forCoefficientC;
 	if (discriminant > 0)
 	{
 		x1 = (-forCoefficientB + sqrt(discriminant)) / (2 * forCoefficientA);
 		x2 = (-forCoefficientB - sqrt(discriminant)) / (2 * forCoefficientA);
-		printf("%f %f", x1, x2); //Отправить в новый файл
+		printf("Дискриминант = %f, x1 = %f, x2 = %f", discriminant, x1, x2);
+		fprintf(file, "Дискриминант = %f, x1 = %f, x2 = %f", discriminant, x1, x2);
 	}
 	else if (discriminant == 0)
 	{
 		x1 = (-forCoefficientB + sqrt(discriminant)) / (2 * forCoefficientA);
-		printf("%f", x1);
+		printf("Дискриминант = %f, x1 = %f", discriminant, x1);
+		fprintf(file, "Дискриминант = %f, x1 = %f", discriminant, x1);
 	}
-	else printf("Корней нет!");
+	else
+	{
+		printf("Корней нет!");
+		fprintf(file, "Корней нет!");
+	}
+	fclose(file);
 }
 
 void decisionIncompleteEquation(float forCoefficientA, float forCoefficientB, float forCoefficientC)
 {
+	FILE* file;
+	file = fopen("2.txt", "w");
 	float x1, x2;
-	if (forCoefficientC == 0 && forCoefficientB != 0)
+	if (forCoefficientB == 0 && forCoefficientC != 0)
 	{
 		if (-(forCoefficientC / forCoefficientA) >= 0)
 		{
 			x1 = sqrt(-(forCoefficientC / forCoefficientA));
 			x2 = -x1;
-			printf("%f %f", x1, x2);
+			printf("Неполное квадратное уравнение, b = 0, x1 = %f, x2 = %f", x1, x2);
+			fprintf(file, "Неполное квадратное уравнение, b = 0, x1 = %f, x2 = %f", x1, x2);
 		}
-		else printf("Нет корней, т.к. -(c/a) < 0");
+		else
+		{
+			printf("Нет корней, т.к. -(c/a) < 0");
+			fprintf(file, "Нет корней, т.к. -(c/a) < 0");
+		}
 	}
-	else if (forCoefficientB == 0 && forCoefficientC != 0)
+	else if (forCoefficientC == 0 && forCoefficientB != 0)
 	{
 		x1 = 0;
 		x2 = -(forCoefficientB / forCoefficientA);
-		printf("%f %f", x1, x2);
+		printf("Неполное квадратное уравнение, c = 0, x1 = %f, x2 = %f", x1, x2);
+		fprintf(file, "Неполное квадратное уравнение, c = 0, x1 = %f, x2 = %f", x1, x2);
 	}
 	else 
 	{
 		x1 = 0;
-		printf("%f", x1);
+		printf("Неполное квадратное уравнение, c = 0 b = 0");
+		fprintf(file, "Неполное квадратное уравнение, c = 0 b = 0");
 	}
+	fclose(file);
 }
