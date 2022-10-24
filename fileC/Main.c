@@ -3,41 +3,89 @@
 #include <string.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <math.h>
+
+float* getСoefficients();
+void decisionCompleteEquation(float, float, float);
+void decisionIncompleteEquation(float, float, float);
 
 int main(void)
 {
+	system("chcp 1251>n");
+	float* coefficients = getСoefficients();
+	float coefficientA = coefficients[0], coefficientB = coefficients[1], coefficientC = coefficients[2];
+	printf("a = %f, b = %f, c = %f\n", coefficientA, coefficientB, coefficientC);
+
+	if (coefficients[0] == 0) printf("Уравнение не является квадратным, т.к. a == 0");
+	else if (coefficients[1] != 0 && coefficients[2] != 0) decisionCompleteEquation(coefficientA, coefficientB, coefficientC);
+	else decisionIncompleteEquation(coefficientA, coefficientB, coefficientC);
+}
+
+float* getСoefficients()
+{
 	FILE* file;
-	char buffer[12];
+	char textFromFile[11];
 	file = fopen("1.txt", "r");
-	fgets(buffer, 11, file);
-	printf("%s", buffer);
+	fgets(textFromFile, 11, file);
+	printf("%s", textFromFile);
+	printf("\n");
 	fclose(file);
 
-	char* lastOne;
-	float* lastTwo = calloc(1, sizeof(float*)+1);
-	int j = 0;
+	char* SplitTextFromFile;
+	float* coefficientsFromFile = calloc(3, sizeof(float*) + 1);
+	SplitTextFromFile = strtok(textFromFile, " ");
 
-
-	lastOne = strtok(buffer, " ");
-	int i = 0;
-	printf("\n%p\n ", &lastOne[0]);
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; SplitTextFromFile != NULL; i++)
 	{
-		printf("%p ", &lastOne[i]);
- 	}
-	printf("\n%p ", &lastOne);
-	while (lastOne != NULL)
-	{
-		printf("\n%s\n", lastOne);
-		printf("\n%p\n", &lastOne);
-		lastTwo[i] = atof(lastOne);
-		lastOne = strtok(NULL, " ");
-		i++;
-		
+		printf("%s\n", SplitTextFromFile);
+		coefficientsFromFile[i] = atof(SplitTextFromFile);
+		SplitTextFromFile = strtok(NULL, " ");
 	}
+	return coefficientsFromFile;
+}
 
-	for (int i = 0; i < 3; i++)
+void decisionCompleteEquation(float forCoefficientA, float forCoefficientB, float forCoefficientC)
+{
+	float discriminant;
+	float x1, x2;
+	
+	discriminant = pow(forCoefficientB, 2) - 4 * forCoefficientA * forCoefficientC;
+	if (discriminant > 0)
 	{
-		printf("%f ", lastTwo[i]);
+		x1 = (-forCoefficientB + sqrt(discriminant)) / (2 * forCoefficientA);
+		x2 = (-forCoefficientB - sqrt(discriminant)) / (2 * forCoefficientA);
+		printf("%f %f", x1, x2); //Отправить в новый файл
+	}
+	else if (discriminant == 0)
+	{
+		x1 = (-forCoefficientB + sqrt(discriminant)) / (2 * forCoefficientA);
+		printf("%f", x1);
+	}
+	else printf("Корней нет!");
+}
+
+void decisionIncompleteEquation(float forCoefficientA, float forCoefficientB, float forCoefficientC)
+{
+	float x1, x2;
+	if (forCoefficientC == 0 && forCoefficientB != 0)
+	{
+		if (-(forCoefficientC / forCoefficientA) >= 0)
+		{
+			x1 = sqrt(-(forCoefficientC / forCoefficientA));
+			x2 = -x1;
+			printf("%f %f", x1, x2);
+		}
+		else printf("Нет корней, т.к. -(c/a) < 0");
+	}
+	else if (forCoefficientB == 0 && forCoefficientC != 0)
+	{
+		x1 = 0;
+		x2 = -(forCoefficientB / forCoefficientA);
+		printf("%f %f", x1, x2);
+	}
+	else 
+	{
+		x1 = 0;
+		printf("%f", x1);
 	}
 }
